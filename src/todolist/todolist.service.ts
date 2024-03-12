@@ -15,7 +15,13 @@ export class TodolistService {
         return await this.prisma.task.findFirst({
             where: {
                 id: taskId
+            },
+            select: {
+                title: true,
+                description: true
             }
+
+
         });
     }
 
