@@ -29,7 +29,7 @@ function TaskDetails({ taskId }: { taskId: string }) {
     <div className={styles.container}>
       <div>
         <span className={styles[`${task.done ? "done" : ""}`]}>
-          {task.name}
+          {task.title}
         </span>
 
         <span className={styles[`${task.done ? "done" : ""}`]}>
