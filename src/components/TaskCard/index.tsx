@@ -4,6 +4,7 @@ import styles from "./styles.module.scss";
 import { useAppDispatch } from "../../app/hooks";
 import { changeTaskStatus, deleteTask } from "../../features/tasks";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import TaskDetails from "../TaskDetail";
 
 interface IProps {
@@ -13,7 +14,14 @@ interface IProps {
 function TaskCard({ task }: IProps) {
   const dispatch = useAppDispatch();
 
+  const navigate = useNavigate();
+
   const [showDetails, setShowDetails] = useState(false);
+
+  const handleTitleClick = () => {
+    setShowDetails(!showDetails);
+    navigate(`/taskDetail/${task.id}`);
+  };
 
   return (
     <div className={styles.container}>
@@ -25,7 +33,7 @@ function TaskCard({ task }: IProps) {
         />
         <span
           className={styles[`${task.done ? "done" : ""}`]}
-          onClick={() => setShowDetails(!showDetails)}
+          onClick={handleTitleClick}
           style={{ cursor: "pointer" }}
         >
           {task.title}
@@ -34,7 +42,7 @@ function TaskCard({ task }: IProps) {
       <button onClick={() => dispatch(deleteTask(task.id))}>
         <img src={TrashIcon} alt="trash" />
       </button>
-      {showDetails && <TaskDetails taskId={task.id} />}
+      {showDetails && <TaskDetails />}
     </div>
   );
 }

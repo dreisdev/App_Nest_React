@@ -6,7 +6,7 @@ function MainRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Main />} />
-      <Route path="/taskDetail" element={<TaskDetails taskId="" />} />
+      <Route path="/taskDetail/:id" element={<TaskDetails />} />
     </Routes>
   );
 }

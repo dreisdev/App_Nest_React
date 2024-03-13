@@ -2,24 +2,35 @@ import { useEffect, useState } from "react";
 import { TaskType } from "../../types/TaskType";
 import styles from "./styles.module.scss";
 import api from "../../services/api/Axios-Instance";
+import { useParams, useNavigate } from "react-router-dom";
+import Header from "../Header";
+import ModalNewTask from "../ModalNewTask";
 
-function TaskDetails({ taskId }: { taskId: string }) {
+function TaskDetails() {
   const [task, setTask] = useState<TaskType | null>(null);
+
+  const [open, setOpen] = useState(false);
+
+  const { id } = useParams();
+
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   useEffect(() => {
     const fetchTaskDetails = async () => {
       try {
-        const response = await api.get(`/todolist/detail/${taskId}`);
+        const response = await api.get(`/todolist/detail/${id}`);
         setTask(response.data);
-        console.log(response.data);
-        console.log(taskId);
       } catch (error) {
         console.error("Error fetching task details:", error);
       }
     };
 
     fetchTaskDetails();
-  }, [taskId]);
+  }, [id]);
 
   if (!task) {
     return <div>Loading...</div>;
@@ -28,14 +39,18 @@ function TaskDetails({ taskId }: { taskId: string }) {
   return (
     <div className={styles.container}>
       <div>
+        <Header handleOpenModal={() => setOpen(true)} operation="edit" />
+        <ModalNewTask open={open} handleClose={() => setOpen(false)} />
+      </div>
+      <div>
         <span className={styles[`${task.done ? "done" : ""}`]}>
-          {task.title}
-        </span>
-
-        <span className={styles[`${task.done ? "done" : ""}`]}>
-          {task.description}
+          Detalhe da Tarefa: {task.description}
         </span>
       </div>
+
+      <button className="btn-edit" onClick={handleBack}>
+        ⬅ Voltar
+      </button>
     </div>
   );
 }

@@ -8,19 +8,10 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectTasks, fetchTasks } from "../../features/tasks";
 
 function Main() {
-  // const taskFromRedux = useAppSelector(selectTasks);
   const dispatch = useAppDispatch();
   const { tasks } = useAppSelector(selectTasks);
 
-  // const [tasks, setTasks] = useState<TaskType[]>(taskFromRedux.tasks);
-
   const [open, setOpen] = useState(false);
-
-  // useEffect(() => {
-  //   setTasks(taskFromRedux.tasks);
-  //   console.log("Tarefas atualizadas:", taskFromRedux.tasks);
-
-  // }, [taskFromRedux]);
 
   useEffect(() => {
     dispatch(fetchTasks());
