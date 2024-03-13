@@ -1,6 +1,4 @@
-import { useSelector } from "react-redux";
 import styles from "./styles.module.scss";
-import { TaskType } from "../../types/TaskType";
 import { useAppSelector } from "../../app/hooks";
 import { selectTasks } from "../../features/tasks";
 

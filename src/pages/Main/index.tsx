@@ -1,16 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EmptyIcon from "../../assets/empty.svg";
 import Header from "../../components/Header";
 import ModalNewTask from "../../components/ModalNewTask";
 import TaskCard from "../../components/TaskCard";
 import styles from "./styles.module.scss";
-import { useAppSelector } from "../../app/hooks";
-import { selectTasks } from "../../features/tasks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { selectTasks, fetchTasks } from "../../features/tasks";
 
 function Main() {
+  // const taskFromRedux = useAppSelector(selectTasks);
+  const dispatch = useAppDispatch();
   const { tasks } = useAppSelector(selectTasks);
 
+  // const [tasks, setTasks] = useState<TaskType[]>(taskFromRedux.tasks);
+
   const [open, setOpen] = useState(false);
+
+  // useEffect(() => {
+  //   setTasks(taskFromRedux.tasks);
+  //   console.log("Tarefas atualizadas:", taskFromRedux.tasks);
+
+  // }, [taskFromRedux]);
+
+  useEffect(() => {
+    dispatch(fetchTasks());
+  }, []);
 
   return (
     <div className={styles.container}>
