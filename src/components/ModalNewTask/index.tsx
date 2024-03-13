@@ -2,7 +2,7 @@ import { useState } from "react";
 import CloseIcon from "../../assets/close.svg";
 import styles from "./styles.module.scss";
 import { useAppDispatch } from "../../app/hooks";
-import { addNewTask } from "../../features/tasks";
+import { addTask } from "../../features/tasks";
 
 interface IProps {
   open: boolean;
@@ -16,7 +16,7 @@ function ModalNewTask({ open, handleClose }: IProps) {
 
   function handleAdd() {
     if (!inputTitle || !inputDescription) return;
-    dispatch(addNewTask({ title: inputTitle, description: inputDescription }));
+    dispatch(addTask({ title: inputTitle, description: inputDescription }));
     setInputTitle("");
     setInputDescription("");
     handleClose();

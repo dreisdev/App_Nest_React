@@ -16,13 +16,31 @@ export const fetchTasks = createAsyncThunk(
     }
 )
 
+export const addTask = createAsyncThunk(
+    'todolist/addTask',
+    async (taskData: { title: string, description: string }) => {
+        const response = await api.post<TaskType>('/todolist/create-task', taskData);
+        return response.data;
+    }
+
+)
+
+export const deleteTask = createAsyncThunk(
+    'todolist/deleteTask',
+    async (taskId: string) => {
+        await api.delete<TaskType>(`/todolist/delete/${taskId}`);
+        return taskId
+    }
+
+)
+
 
 export interface TaskState {
     tasks: TaskType[];
     task: TaskType | null;
     loading: boolean;
     error: string;
-    // status: 'idle' | 'loading' | 'succeeded' | 'failed';
+
 }
 
 const initialState: TaskState = {
@@ -30,7 +48,7 @@ const initialState: TaskState = {
     task: null,
     loading: false,
     error: '',
-    // status: 'idle',
+
 }
 
 export const tasksSlice = createSlice({
@@ -40,7 +58,7 @@ export const tasksSlice = createSlice({
         addNewTask: (state, action: PayloadAction<{ title: string, description: string }>) => {
             const { tasks } = state;
             const id = String(tasks.length + 1);
-            // const id = tasks.length ? tasks[tasks.length - 1].id + 1 : 1;
+
 
             const newTask = {
                 id,
@@ -78,18 +96,47 @@ export const tasksSlice = createSlice({
         builder
             .addCase(fetchTasks.pending, (state) => {
                 state.loading = true;
-            });
-        builder.addCase(fetchTasks.fulfilled, (state, action) => {
+            })
+            .addCase(fetchTasks.fulfilled, (state, action) => {
 
-            state.loading = false;
-            state.error = "";
-            state.tasks = [...action.payload];
-        });
-        builder.addCase(fetchTasks.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.error.message ?? "failed to fetch tasks";
-        })
-    }
+                state.loading = false;
+                state.error = "";
+                state.tasks = [...action.payload];
+            })
+            .addCase(fetchTasks.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message ?? "failed to fetch tasks";
+            })
+            .addCase(addTask.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(addTask.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = "";
+                state.tasks.push(action.payload);
+            })
+            .addCase(addTask.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message ?? "failed to add task";
+            })
+            .addCase(deleteTask.pending, (state) => {
+                state.loading = true;
+
+
+            })
+            .addCase(deleteTask.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = "";
+                const deletedTaskId = action.payload;
+                state.tasks = state.tasks.filter((task) => task.id !== deletedTaskId);
+
+            })
+            .addCase(deleteTask.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message ?? "failed to delete task";
+            })
+
+    },
 });
 
 // Action creators are generated for each case reducer function

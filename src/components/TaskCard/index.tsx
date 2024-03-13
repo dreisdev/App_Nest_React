@@ -2,7 +2,7 @@ import TrashIcon from "../../assets/trash.svg";
 import { TaskType } from "../../types/TaskType";
 import styles from "./styles.module.scss";
 import { useAppDispatch } from "../../app/hooks";
-import { changeTaskStatus, removeTask } from "../../features/tasks";
+import { changeTaskStatus, deleteTask } from "../../features/tasks";
 import { useState } from "react";
 import TaskDetails from "../TaskDetail";
 
@@ -31,7 +31,7 @@ function TaskCard({ task }: IProps) {
           {task.title}
         </span>
       </div>
-      <button onClick={() => dispatch(removeTask(task.id))}>
+      <button onClick={() => dispatch(deleteTask(task.id))}>
         <img src={TrashIcon} alt="trash" />
       </button>
       {showDetails && <TaskDetails taskId={task.id} />}
