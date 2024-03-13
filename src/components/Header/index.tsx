@@ -13,15 +13,12 @@ function Header({ handleOpenModal, operation = "add" }: IProps) {
       <div></div>
       <div className={styles["container-add"]}>
         <img src={Logo} alt="logo" />
-        {operation === "add" ? ( // Mostrar o ícone de adição se a operação for "add"
+        {operation === "add" ? (
           <button className="btn-pink" onClick={handleOpenModal}>
             ✏️
           </button>
         ) : (
-          <button
-            className="btn-pink"
-            onClick={() => console.log("Editar tarefa")}
-          >
+          <button className="btn-pink" onClick={handleOpenModal}>
             📝
           </button>
         )}

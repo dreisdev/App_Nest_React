@@ -4,14 +4,18 @@ import styles from "./styles.module.scss";
 import api from "../../services/api/Axios-Instance";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "../Header";
-import ModalNewTask from "../ModalNewTask";
+import ModalUpdateTask from "../ModalUpdateTask";
+
+type TaskParams = {
+  id: string;
+};
 
 function TaskDetails() {
   const [task, setTask] = useState<TaskType | null>(null);
 
   const [open, setOpen] = useState(false);
 
-  const { id } = useParams();
+  const { id } = useParams<TaskParams>();
 
   const navigate = useNavigate();
 
@@ -40,7 +44,11 @@ function TaskDetails() {
     <div className={styles.container}>
       <div>
         <Header handleOpenModal={() => setOpen(true)} operation="edit" />
-        <ModalNewTask open={open} handleClose={() => setOpen(false)} />
+        <ModalUpdateTask
+          open={open}
+          taskId={id || ""}
+          handleClose={() => setOpen(false)}
+        />
       </div>
       <div>
         <span className={styles[`${task.done ? "done" : ""}`]}>

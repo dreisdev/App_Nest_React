@@ -1,4 +1,4 @@
-import type { PayloadAction } from '@reduxjs/toolkit';
+
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TaskType } from '../../types/TaskType';
 import { RootState } from '../../app/store';
@@ -34,6 +34,15 @@ export const deleteTask = createAsyncThunk(
 
 )
 
+export const updateTask = createAsyncThunk(
+    'todolist/updateTask',
+    async ({ taskId, taskData }: { taskId: string, taskData: { title: string, description: string } }) => {
+        const response = await api.patch<TaskType>(`/todolist/update/${taskId}`, taskData);
+        return response.data;
+
+    }
+)
+
 
 export interface TaskState {
     tasks: TaskType[];
@@ -54,44 +63,7 @@ const initialState: TaskState = {
 export const tasksSlice = createSlice({
     name: 'tasks',
     initialState,
-    reducers: {
-        addNewTask: (state, action: PayloadAction<{ title: string, description: string }>) => {
-            const { tasks } = state;
-            const id = String(tasks.length + 1);
-
-
-            const newTask = {
-                id,
-                title: action.payload.title,
-                description: action.payload.description,
-                done: false,
-            }
-
-            tasks.push(newTask);
-
-        },
-
-        removeTask: (state, action: PayloadAction<string>) => {
-            const { tasks } = state;
-
-            const taskIndex = tasks.findIndex((item) => item.id === action.payload);
-
-            if (taskIndex === -1) return;
-
-            tasks.splice(taskIndex, 1);
-        },
-
-        changeTaskStatus: (state, action: PayloadAction<string>) => {
-            const { tasks } = state;
-
-            const currentTask = tasks.find((item) => item.id === action.payload);
-
-            if (!currentTask) return;
-
-            currentTask.done = !currentTask.done;
-        }
-
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(fetchTasks.pending, (state) => {
@@ -135,12 +107,25 @@ export const tasksSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message ?? "failed to delete task";
             })
+            .addCase(updateTask.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(updateTask.fulfilled, (state) => {
+                state.loading = false;
+                state.error = "";
+
+            })
+            .addCase(updateTask.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message ?? "Failed to update task";
+            });
+
 
     },
 });
 
-// Action creators are generated for each case reducer function
-export const { addNewTask, removeTask, changeTaskStatus } = tasksSlice.actions;
+
+
 
 export default tasksSlice.reducer;
 
