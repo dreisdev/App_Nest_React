@@ -33,7 +33,7 @@ export class TodolistController {
   }
 
   @Delete('/delete/:id')
-  async deleteTask(@Res() res: Response, @Param('id') id: string) {
+  async delTask(@Res() res: Response, @Param('id') id: string) {
     await this.todolistService.deleteTask(id);
     res.status(HttpStatus.NO_CONTENT).send();
   }

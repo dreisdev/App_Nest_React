@@ -40,10 +40,10 @@ export class TodolistService {
         });
     }
 
-    async deleteTask(taskId: string) {
+    async deleteTask(id: string) {
         return await this.prisma.task.delete({
             where: {
-                id: taskId
+                id
             }
         });
 
